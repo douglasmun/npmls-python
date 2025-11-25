@@ -299,7 +299,7 @@ npmls/
 ├── pyproject.toml       # Modern Python packaging
 ├── README.md            # Documentation
 ├── LICENSE              # MIT license
-├── test_npmis.py        # Test suite
+├── test_npmls.py        # Test suite
 └── .github/             # GitHub Actions
     └── workflows/
         └── ci.yml
