@@ -269,7 +269,7 @@ async def ci_security_check():
 
 ```bash
 # Run all tests
-python3 test_npmis.py
+python3 test_npmls.py
 ```
 
 ## Development
