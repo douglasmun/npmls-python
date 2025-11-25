@@ -1,0 +1,29 @@
+# NPM Security Scanner - Python Requirements
+# Install with: pip install -r requirements.txt
+
+# Core dependencies
+aiohttp>=3.8.0,<4.0.0          # Async HTTP client for downloading databases
+aiofiles>=22.1.0,<24.0.0       # Async file operations
+rich>=13.0.0,<14.0.0            # Rich terminal output and progress bars
+packaging>=23.0                 # SECURITY: Semantic version comparison (prevents false negatives)
+
+# Optional dependencies for enhanced functionality
+click>=8.0.0,<9.0.0             # Alternative CLI framework (if preferred over argparse)
+pydantic>=1.10.0,<3.0.0         # Data validation (optional, for stricter typing)
+httpx>=0.24.0,<1.0.0            # Alternative HTTP client (if preferred over aiohttp)
+
+# Development dependencies (install with: pip install -r requirements.txt[dev])
+pytest>=7.0.0,<8.0.0            # Testing framework
+pytest-asyncio>=0.21.0,<1.0.0   # Async testing support
+black>=23.0.0,<24.0.0           # Code formatting
+flake8>=6.0.0,<7.0.0            # Linting
+mypy>=1.0.0,<2.0.0              # Type checking
+coverage>=7.0.0,<8.0.0          # Code coverage
+
+# Platform-specific optional dependencies
+# Windows: Add these for better Windows integration
+# pywin32>=306                   # Windows API access
+# wmi>=1.5.1                     # Windows Management Instrumentation
+
+# macOS/Linux: These are typically available in system Python
+# No additional platform-specific requirements needed
