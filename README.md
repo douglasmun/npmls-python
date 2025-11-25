@@ -1,9 +1,6 @@
 # npmls-python - NPM Security Scanner (Python)
 
-[![PyPI version](https://img.shields.io/pypi/v/npmls.svg)](https://pypi.org/project/npmls/)
-[![Python versions](https://img.shields.io/pypi/pyversions/npmls.svg)](https://pypi.org/project/npmls/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Downloads](https://img.shields.io/pypi/dm/npmls.svg)](https://pypi.org/project/npmls/)
 
 A fast, cross-platform Python application that scans your entire system for npm modules and detects known malicious packages from recent supply chain attacks.
 
