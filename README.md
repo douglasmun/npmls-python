@@ -1,4 +1,4 @@
-# npmls - NPM Security Scanner (Python)
+# npmls-python - NPM Security Scanner (Python)
 
 [![PyPI version](https://img.shields.io/pypi/v/npmls.svg)](https://pypi.org/project/npmls/)
 [![Python versions](https://img.shields.io/pypi/pyversions/npmls.svg)](https://pypi.org/project/npmls/)
@@ -7,7 +7,7 @@
 
 A fast, cross-platform Python application that scans your entire system for npm modules and detects known malicious packages from recent supply chain attacks.
 
-**Credits to the Original NPMLS Rust Author:** Albert Hui <albert@securityronin.com>
+**Credits to the Original NPMLS Rust** https://github.com/h4x0r/npmls **and its author:** Albert Hui <albert@securityronin.com>
 
 **Ported to NPMLS Python by:** Douglas Mun <douglasmun@yahoo.com>
 
@@ -26,52 +26,28 @@ A fast, cross-platform Python application that scans your entire system for npm 
 
 ## Installation
 
-### From PyPI (Recommended)
-```bash
-# Install the latest stable version
-pip install npmls
+The entire application is contained in a single `npmls.py` file, making it easy to:
+- **Copy to any Python environment** without installation
+- **Include in existing Python projects** as a module
+- **Distribute as a standalone script** (just needs Python 3.8+)
+- **Integrate into CI/CD pipelines** for security scanning
 
-# Or with development dependencies
-pip install "npmls[dev]"
-
-# Windows users may want additional features
-pip install "npmls[windows]"
-```
-
-### From Source
+### From Source (Recommended)
 ```bash
 # Clone the repository
-git clone https://github.com/h4x0r/npmls.git
-cd npmls
-
-# Install in development mode
-pip install -e .
-
-# Or install with all dependencies
-pip install -e ".[dev,windows]"
-```
-
-### Development Installation
-```bash
-# Clone and set up for development
-git clone https://github.com/h4x0r/npmls.git
-cd npmls
+git clone https://github.com/douglasmun/npmls-python
 
 # Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+python3 -m venv path/to/npmls-python
+source npmls-python/bin/activate  # On Windows: venv\Scripts\activate
+cd npmls-python
 
-# Install development dependencies
-pip install -e ".[dev]"
+# Downloads the required python packages
+python3.12 -m pip install -r requirements.txt
 
-# Run tests
-pytest
+# Usage
+python3 npmls.py --help
 
-# Format code
-black npmls.py
-
-# Type checking
-mypy npmls.py
 ```
 
 ## Requirements
@@ -88,45 +64,45 @@ mypy npmls.py
 ### Basic Scan (Automatic Updates)
 ```bash
 # Scan entire system - automatically downloads/updates database as needed
-npmls
+python3 npmls.py
 
 # Show only malicious packages
-npmls --threats-only
+python3 npmls.py --threats-only
 
 # Verbose output with progress (shows download progress on first run)
-npmls --verbose
+python3 npmls.py --verbose
 ```
 
 ### Manual Database Control
 ```bash
 # Force database update (optional - normally automatic)
-npmls --update-db
+python3 npmls.py --update-db
 
 # Offline mode - skip all downloads (no threat detection in offline mode)
-npmls --offline
+python3 npmls.py --offline
 ```
 
 ### Output Formats
 ```bash
 # JSON output
-npmls --format json
+python3 npmls.py --format json
 
 # CSV output  
-npmls --format csv --output scan_results.csv
+python3 npmls.py --format csv --output scan_results.csv
 
 # Table output (default)
-npmls --format table
+python3 npmls.py --format table
 
 # List all known threats
-npmls --list-threats
+python3 npmls.py --list-threats
 
 # Search for specific threats
-npmls --list-threats chalk
+python3 npmls.py --list-threats chalk
 ```
 
 ### Command Line Options
 ```
-usage: npmls [-h] [-o OUTPUT] [--format {table,json,csv}] [-t] [-v]
+usage: python3 npmls.py [-h] [-o OUTPUT] [--format {table,json,csv}] [-t] [-v]
              [--offline] [--update-db] [--list-threats [FILTER]]
              [--no-auto-files] [--force]
 
@@ -148,11 +124,11 @@ options:
   --force               Force overwrite of existing output files without confirmation
 
 Examples:
-  npmls                              # Scan entire system
-  npmls --threats-only               # Show only malicious packages
-  npmls --format json -o report.json # JSON output to file
-  npmls --list-threats               # List all known threats
-  npmls --offline                    # Offline mode (no threat detection)
+  python3 npmls.py                              # Scan entire system
+  python3 npmls.py --threats-only               # Show only malicious packages
+  python3 npmls.py --format json -o report.json # JSON output to file
+  python3 npmls.py --list-threats               # List all known threats
+  python3 npmls.py --offline                    # Offline mode (no threat detection)
 ```
 
 ## Sample Output
@@ -289,6 +265,46 @@ async def ci_security_check():
         exit(0)
 ```
 
+## Testing
+
+```bash
+# Run all tests
+python3 test_npmis.py
+```
+
+## Development
+
+### Code Quality Tools
+
+```bash
+# Format code
+black npmls.py
+
+# Lint code
+flake8 npmls.py
+
+# Type checking
+mypy npmls.py
+
+# All quality checks
+black npmls.py && flake8 npmls.py && mypy npmls.py && pytest
+```
+
+### Project Structure
+
+```
+npmls/
+├── npmls.py             # Main application file
+├── requirements.txt     # Python dependencies
+├── pyproject.toml       # Modern Python packaging
+├── README.md            # Documentation
+├── LICENSE              # MIT license
+├── test_npmis.py        # Test suite
+└── .github/             # GitHub Actions
+    └── workflows/
+        └── ci.yml
+```
+
 ## Architecture
 
 The Python implementation follows modern async/await patterns and professional Python practices:
@@ -326,109 +342,6 @@ The Python version maintains the performance characteristics of the original Rus
 - **Vulnerability database download**: 2-5 minutes (first run only)
 - **Cache refresh**: < 30 seconds (subsequent updates)
 
-## Deployment
-
-### Docker Container
-
-You can run npmls in a Docker container for isolated, reproducible scans:
-
-```dockerfile
-FROM python:3.11-slim
-
-# Copy application files
-WORKDIR /app
-COPY npmls.py requirements.txt ./
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Set entry point
-ENTRYPOINT ["python", "npmls.py"]
-
-# Example usage:
-# docker build -t npmls .
-# docker run -v /path/to/scan:/scan npmls /scan
-```
-
-### Standalone Script
-
-The entire application is contained in a single `npmls.py` file, making it easy to:
-- **Copy to any Python environment** without installation
-- **Include in existing Python projects** as a module
-- **Distribute as a standalone script** (just needs Python 3.8+)
-- **Integrate into CI/CD pipelines** for security scanning
-
-Simply copy `npmls.py` and install the 4 dependencies:
-```bash
-pip install aiohttp aiofiles rich packaging
-python npmls.py
-```
-
-## Testing
-
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=npmls
-
-# Run only unit tests
-pytest -m unit
-
-# Run only integration tests (slower)
-pytest -m integration
-
-# Verbose test output
-pytest -v
-```
-
-## Development
-
-### Code Quality Tools
-
-```bash
-# Format code
-black npmls.py
-
-# Lint code
-flake8 npmls.py
-
-# Type checking
-mypy npmls.py
-
-# All quality checks
-black npmls.py && flake8 npmls.py && mypy npmls.py && pytest
-```
-
-### Project Structure
-
-```
-npmls/
-├── npmls.py             # Main application file
-├── requirements.txt     # Python dependencies
-├── pyproject.toml       # Modern Python packaging
-├── README.md            # Documentation
-├── LICENSE              # MIT license
-├── test_npmis.py        # Test suite
-└── .github/             # GitHub Actions
-    └── workflows/
-        ├── ci.yml
-        └── release.yml
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass (`pytest`)
-6. Format code (`black .`)
-7. Commit your changes (`git commit -m 'Add amazing feature'`)
-8. Push to the branch (`git push origin feature/amazing-feature`)
-9. Open a Pull Request
-
 ## Security Notice
 
 This tool is for defensive security purposes only. It helps identify potentially compromised npm packages on your system. Always verify findings and update to secure package versions.
@@ -452,7 +365,7 @@ Choose the Python version if you:
 - Want simpler development and contribution process
 - Are comfortable with pip/Python dependency management
 
-Choose the Original Rust version if you:
+Choose the original Rust version if you:
 - Need maximum performance
 - Prefer single-binary deployment
 - Want minimal memory footprint
@@ -461,15 +374,3 @@ Choose the Original Rust version if you:
 ## License
 
 MIT License - see LICENSE file for details.
-
-## Changelog
-
-### v1.0 (2024-11-25)
-- Production-ready Python implementation
-- Feature parity with original Rust version
-- Async/await architecture for high performance
-- Rich terminal UI with progress bars
-- Comprehensive test suite with 80%+ coverage
-- Professional Python packaging with pyproject.toml
-- OSV vulnerability database integration
-- Cross-platform support (Windows, macOS, Linux)
